@@ -1,0 +1,49 @@
+CLI command line interface
+git
+git config --global -e
+git config --global user.name "name"
+gitconfig --global user.email "mailid"
+
+mkdir hen
+cd hen
+touch f1 f2
+git init
+git add <names>
+git add .
+git status
+git commit -m "first data"
+git remote add origin link
+git push -u origin master
+
+
+git log
+git log --oneline
+git config --list
+git remote
+git remote -v
+git remote remove <name>
+
+git branch
+git branch devops
+git branch
+git checkout devops
+git branch -d devops ( for deleting branch)
+
+git tag
+git tag v.1.0
+git tag
+git push origin v.1.0
+
+vi practice   (vi is editor - practice is a file name-  file is automatically created)
+git ammend is used for exiting commit edit time : git commit --amend -m 'a'
+git stash : to hide staging file command is - git stash
+un hide : git stash pop
+staging and untracked file : git stash -u
+develops add only selected commit from child to branch : git cherry-pick id
+rearrange and delete commit : git rebase -i HEAD~4(IF TOTAL COMMITS 5 THEN ADD 4, IF TOTAL COMMITS 3 THEN ADD 2)
+BRANCH MERGE FROM MASTER BRANCH : git merge branchname
+  Fast forward merge is called git rebase
+  git rebase branchneme
+  git merge branchname - from  master branch
+  staging file to untracking file : git restore --staged
+git clone link - download same file in machine 
