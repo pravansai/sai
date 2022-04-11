@@ -28,6 +28,7 @@ git branch devops
 git branch
 git checkout devops
 git branch -d devops ( for deleting branch)
+git push origin delete remote branch name (for deleting remote)
 
 git tag
 git tag v.1.0
