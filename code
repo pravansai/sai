@@ -35,6 +35,8 @@ git tag v.1.0
 git tag
 git push origin v.1.0
 
+git show commitid (all edits of the commit it showing)
+
 vi practice   (vi is editor - practice is a file name-  file is automatically created)
 git ammend is used for exiting commit edit time : git commit --amend -m 'a'
 git stash : to hide staging file command is - git stash
