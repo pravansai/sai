@@ -1,4 +1,4 @@
-CLI command line interfaces are not good
+CLI command line interfaces are important
 git
 git config --global -e
 git config --global user.name "name"
