@@ -1,0 +1,34 @@
+jenkin to docker integration - build periodically-jenkinns build number as docker image tag no.
+node
+{
+    def buildNumber = BUILD_NUMBER
+    def mavenHome = tool name: "maven3.6.0"
+    properties([buildDiscarder(logRotator(artifactDaysToKeepStr: '', artifactNumToKeepStr: '5', daysToKeepStr: '', numToKeepStr: '5')), pipelineTriggers([cron('*/2 * * * *')])])
+    stage('checkoutstage'){
+    git 'https://github.com/pravansai/java-web-app-docker.git'
+    }
+    stage('buildstage'){
+        sh "${mavenHome}/bin/mvn clean package"
+    }
+    stage('sonarqube'){
+        sh "${mavenHome}/bin/mvn sonar:sonar"
+    }
+    stage('nexusupload'){
+        nexusArtifactUploader artifacts: [[artifactId: 'java-web-app', classifier: '', file: '/var/lib/jenkins/workspace/pipeline1/target/java-web-app-1.0.war', type: 'war']], credentialsId: '0b1e14b9-0a20-4ee5-b1b9-919572f96f40', groupId: 'com.mt', nexusUrl: '3.90.203.129:8081', nexusVersion: 'nexus3', protocol: 'http', repository: 'flipkart-release', version: '1.0'
+    }
+    stage('build docker image'){
+        sh "docker build -t pravansairmsi/java-web-app:${buildNumber} ."
+    }
+    stage('docker login and push'){
+        withCredentials([string(credentialsId: 'dockerhubpwd', variable: 'dockerhubpwd')]) {
+            sh "docker login -u pravansairmsi -p ${dockerhubpwd}"
+        }
+            sh "docker push pravansairmsi/java-web-app:${buildNumber}"
+    }
+    stage('deploy to deployment server'){
+        sshagent(['9fb8919d-1ec4-4944-9cd2-3d180cfa60de']) {
+         sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.90.197 docker rm -f javawebappcontainer || true"
+         sh "ssh -o StrictHostKeyChecking=no ec2-user@172.31.90.197 docker run -d -p 8080:8080 --name javawebappcontainer pravansairmsi/java-web-app:${buildNumber}"
+}
+    }
+}
