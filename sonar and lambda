@@ -45,5 +45,15 @@ def lambda_handler(event, context):
     print('started your instances: ' + str(instances))
 
 sonar link:
-deb [trusted=yes] http://downloads.sourceforge.net/project/sonar-pkg/deb binary/
+ apt-get update -y
+    2  apt-get install openjdk-11-jdk -y
+    3  vim /etc/apt/sources.list
+    deb [trusted=yes] http://downloads.sourceforge.net/project/sonar-pkg/deb binary/
+
+    4  apt-get update -y
+    5  apt-get install sonar -y
+    6  systemctl start sonar
+    7  systemctl enable sonar
+    8  systemctl status sonar
+
  
