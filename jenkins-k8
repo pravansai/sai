@@ -1,0 +1,25 @@
+node{
+    
+    stage("git checkout"){
+        git 'https://github.com/pravansai/spring-boot-mongo-docker-for-k8-s-pipeline.git'
+    }
+    stage("maven clean build"){
+        
+        def mavenHome = tool name:"Maven-3.6.1", type: "maven"
+        def mavenCMD = "${mavenHome}/bin/mvn "
+        sh "${mavenCMD} clean package"
+        
+    }
+    stage("build docker image"){
+        sh "docker build -t pravansairmsi/spring-boot-mongo ."
+    }
+    stage("docker push"){
+        withCredentials([string(credentialsId: 'Dockerhubpasscode', variable: 'dockerhubpasscode')]) {
+          sh "docker login -u pravansairmsi -p ${dockerhubpasscode}"
+}
+        sh "docker push pravansairmsi/spring-boot-mongo "
+    }
+    stage("Deploy to kubernetes cluster"){
+        sh "kubectl apply -f springBootMongo.yml"
+    }
+}
