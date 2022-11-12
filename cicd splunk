@@ -1,0 +1,35 @@
+Create a Jenkins CICD Pipeline to Build a Docker Image with Splunk Integration
+
+https://github.com/cloudacademy/devops-jenkins-docker-splunk
+cd ./devops-jenkins-docker-splunk
+
+injenkins
+docker pipeline plugin
+globel tool config
+gradle
+gradle-4.10.2
+Gradle 4.10.2
+globaltool config
+docker
+docker-latest
+latest
+docker ps -a -f name=webapp
+
+docker exec -it webapp tail -f /var/log/webapp.log
+
+splunk:
+    container_name: splunk
+    image: splunk-ca:latest
+    #image: splunk/splunk:latest
+    networks:
+      - cloudacademylabs
+    ports:
+      - 8000:8000
+      - 9997:9997
+    environment:
+      - SPLUNK_START_ARGS=--accept-license
+      - SPLUNK_PASSWORD=qwerty123
+
+networks:
+  cloudacademylabs:
+    name: cloudacademylabs
