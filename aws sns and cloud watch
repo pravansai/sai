@@ -1,0 +1,21 @@
+A colleague has suggested that your company could use Amazon SNS and Amazon CloudWatch to send notifications when failed SSH connection attempts 
+are detected to an Amazon EC2 instance.
+
+#!/bin/bash
+echo 'Amazon Linux AMI' > /etc/issue
+curl https://s3.amazonaws.com//aws-cloudwatch/downloads/latest/awslogs-agent-setup.py -O
+chmod +x ./awslogs-agent-setup.py
+./awslogs-agent-setup.py -n -r us-west-2 -c https://raw.githubusercontent.com/cloudacademy/labs-CloudWatch-SSHfailures/master/LogAgentConfig.txt
+
+A second Amazon EC2 instance named Malicious Instance that attempts to connect to the App Server via SSH several times a minute
+
+#!/bin/bash
+TARGET_IP="35.90.131.245" (app server public ip)
+SCRIPT="while true; do ssh -o StrictHostKeyChecking=no -o PasswordAuthentication=no $TARGET_IP; sleep 4; done"
+echo $SCRIPT > script.sh
+nohup bash ./script.sh &
+
+sns - topic and email subscription
+cloud watch - add metrics - logs - log group - ssh fails- events - maz static 1min period- 2 -ot breaching -ok
+
+
