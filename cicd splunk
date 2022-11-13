@@ -17,6 +17,30 @@ docker ps -a -f name=webapp
 
 docker exec -it webapp tail -f /var/log/webapp.log
 
+docker pull jenkins/jenkins:lts
+docker-compose up -d && docker-compose logs -f
+
+ Confirm that the Jenkins, Splunk, and Socat docker containers are up and running:
+
+Copy code
+docker ps -a --format "table {{.Names}}\t{{.Status}}"
+
+docker exec -it jenkins cat /var/jenkins_home/secrets/initialAdminPassword
+
+docker ps -a -f name=webapp
+
+docker inspect -f '{{range .NetworkSettings.Networks}}{{.IPAddress}}{{end}}' splunk
+ Confirm that the Splunk Forwarding Agent has been able to form a network connection to the Splunk docker container by executing the command:
+docker exec -it webapp grep "INFO  TcpOutputProc - Connected to idx=" /opt/splunkforwarder/var/log/splunk/splunkd.log
+Examine the Splunk Forwarder outputs.conf file. This instructs the forwarder how to connect to the Splunk service:
+docker exec -it webapp cat /opt/splunkforwarder/etc/system/local/outputs.conf
+Examine the Splunk Forwarder inputs.conf file. This instructs what the forwarder should forward to the Splunk service: 
+docker exec -it webapp cat /opt/splunkforwarder/etc/system/local/inputs.conf
+curl -I http://PUBLIC_IP_CICD_PLATFORM_INSTANCE:9999/webapp/home
+
+docker exec -it webapp tail -f /var/log/webapp.log
+
+
 splunk:
     container_name: splunk
     image: splunk-ca:latest
