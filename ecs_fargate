@@ -1,0 +1,2 @@
+ecs cluster = ec2 instances - responsible - backend used cloudformation stack
+fargate = customer not responsible for infrastructure
