@@ -1,0 +1,71 @@
+resource "aws_subnet" "mysubnet" {
+vpc_id = aws_vpc.web_vpc.id
+cidr_block = "192.168.100.0/25"
+#map_public_ip_on_launch = true
+depends_on = [aws_vpc.web_vpc]
+  tags = {
+    Name = "Main"
+  }
+}
+resource "aws_route_table" "my_route_table" {
+tags = {
+Name = "My_route_table"
+}
+vpc_id = aws_vpc.web_vpc.id
+}
+# Associate subnet to routetable
+resource "aws_route_table_association" "route_association" {
+subnet_id = aws_subnet.mysubnet.id
+route_table_id = aws_route_table.my_route_table.id
+}
+#create igw
+resource "aws_internet_gateway" "my_ig" {
+tags = {
+Name = "my_igw"
+}
+vpc_id = aws_vpc.web_vpc.id
+depends_on = [aws_vpc.web_vpc]
+}
+
+#internet gateway to routetable
+resource "aws_route" "default_route" {
+route_table_id = aws_route_table.my_route_table.id
+destination_cidr_block = "0.0.0.0/0"
+gateway_id = aws_internet_gateway.my_ig.id
+}
+#create sg
+resource "aws_security_group" "app_sg" {
+name        = "App_sg"
+description = "Allow web inbound traffic"
+vpc_id      = aws_vpc.web_vpc.id
+ingress {
+    from_port        = 80
+    to_port          = 80
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"] #officerange
+  }
+ingress {
+    from_port        = 22
+    to_port          = 22
+    protocol         = "tcp"
+    cidr_blocks      = ["0.0.0.0/0"] #officerange
+  }
+egress {
+    from_port        = 0
+    to_port          = 0
+    protocol         = "-1"
+    cidr_blocks      = ["0.0.0.0/0"] #officerange
+  }
+}
+#create an instance
+resource "aws_instance" "web" {
+ami = "ami-094125af156557ca4"
+instance_type = "t2.micro"
+tags = {
+Name = "Web"
+}
+count = 1
+subnet_id = aws_subnet.mysubnet.id
+security_groups = [aws_security_group.app_sg.id]
+}
+
