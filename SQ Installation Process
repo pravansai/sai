@@ -1,0 +1,14 @@
+    1  sudo apt update
+    2  sudo apt upgrade
+    3  sudo apt install openjdk-11-jdk unzip
+    4  wget https://binaries.sonarsource.com/Distribution/sonarqube/sonarqube-8.9.3.48735.zip
+    5  unzip sonarqube-8.9.3.48735.zip
+    6  sudo mv sonarqube-8.9.3.48735 /opt/sonarqube
+    7  sudo useradd -r sonarqube -d /opt/sonarqube
+    8  sudo chown -R sonarqube:sonarqube /opt/sonarqube
+    9  sudo nano /etc/systemd/system/sonarqube.service
+   10  sudo systemctl daemon-reload
+   11  sudo systemctl enable sonarqube.service
+   12  sudo systemctl start sonarqube.service
+   13  sudo systemctl status sonarqube.service
+   14  history
